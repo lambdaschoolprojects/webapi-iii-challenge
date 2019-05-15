@@ -52,12 +52,27 @@ router.get('/:id/posts', validateUserId, async (req, res) => {
     }
 });
 
-router.delete('/:id', (req, res) => {
-
+router.delete('/:id', validateUserId, async (req, res) => {
+    try {
+        const user = await userDb.remove(req.user.id);
+        res.status(200).json(user);
+    } catch(err) {
+        res.status(500).json(err);
+    }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateUserId, validateBody, validateUser, async (req, res) => {
+    console.log(req.body);
+    try {
+        const user = await userDb.update(req.user.id, req.body);
 
+        if (user)
+            res.json(user);
+        else
+            res.status(400).json({ message: "Unable to update the user"});
+    } catch(err) {
+        res.status(500).json(err)
+    }
 });
 
 module.exports = router;
