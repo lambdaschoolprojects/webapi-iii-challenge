@@ -1,9 +1,7 @@
 module.exports = (req, res, next) => {
     const { body } = req;
 
-    console.log(req.body);
-
-    if (!body) return res.status(400).json({ message: "Missing user data"});
+    if (!body || Object.keys(body).length === 0) return res.status(400).json({ message: "Missing user data"});
 
     next();
 }
