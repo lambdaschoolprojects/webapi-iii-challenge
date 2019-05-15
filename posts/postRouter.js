@@ -1,5 +1,6 @@
 const express = require("express");
 const validatePost = require("../middleware/validatePost");
+const validatePostId = require("../middleware/validatePostId");
 
 const postDb = require("../posts/postDb");
 
@@ -18,9 +19,19 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", (req, res) => {});
+router.get("/:id", validatePostId, (req, res) => {
+  res.json(req.post);
+});
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", validatePostId, async (req, res) => {
+  try {
+    const status = await postDb.remove(req.post.id);
+
+    res.json({ message: "Post deleted" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 router.put("/:id", (req, res) => {});
 
