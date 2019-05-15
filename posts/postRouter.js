@@ -1,6 +1,7 @@
 const express = require("express");
 const validatePost = require("../middleware/validatePost");
 const validatePostId = require("../middleware/validatePostId");
+const validateBody = require("../middleware/validateBody");
 
 const postDb = require("../posts/postDb");
 
@@ -33,6 +34,20 @@ router.delete("/:id", validatePostId, async (req, res) => {
   }
 });
 
-router.put("/:id", (req, res) => {});
+router.put(
+  "/:id",
+  validatePostId,
+  validateBody,
+  validatePost,
+  async (req, res) => {
+    try {
+      const result = await postDb.update(req.post.id, req.body);
+
+      res.json({ message: "Posted" });
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
+);
 
 module.exports = router;
