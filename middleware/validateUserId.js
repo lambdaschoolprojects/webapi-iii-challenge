@@ -1,6 +1,6 @@
 const userDb = require('../users/userDb');
 
-modules.export = async (req, res, next) => {
+module.exports = async (req, res, next) => {
     if(!req.body.id) return res.status(400).json({ message: "Invalid user id" });
 
     try {
